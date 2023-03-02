@@ -46,6 +46,7 @@ class CustomTextFormField extends StatelessWidget {
         filled: true,
         // 모든 input 상태의 기본 스타일 세팅
         border: baseBorder,
+        enabledBorder: baseBorder, // 테두리 관련 파라미터
         focusedBorder: baseBorder.copyWith(
           //baseBorder의 모든 특성을 유지하면서 borderSide만 변경
           borderSide: baseBorder.borderSide.copyWith(
