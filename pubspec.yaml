@@ -67,7 +67,7 @@ flutter:
     - asset/img/misc/
     - asset/img/food/
     - asset/svg/icon/
-    - asset/img/logo
+    - asset/img/logo/
     - asset/rive/
 
   # An image asset can refer to one or more resolution-specific "variants", see
