@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_flutter_app/common/const/colors.dart';
 import 'package:restaurant_flutter_app/common/layout/default_layout.dart';
 
 import '../../component/custom_text_form_field.dart';
@@ -8,20 +9,58 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultLayout( // DefaultLayout으로 한 번 감싼다
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomTextFormField(
-            hintText: '이메일을 입력해주세요',
-            onChanged: (String value) {},
-          ),
-          CustomTextFormField(
-            hintText: '비밀번호를 입력해주세요',
-            onChanged: (String value) {},
-            obscureText: true,
-          ),
-        ],
+    return DefaultLayout(
+      // DefaultLayout으로 한 번 감싼다
+      child: SafeArea( // 디바이스 영역이 앱의 위젯 영역을 침범하는 것을 막아준다
+        top: true,
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 좌우를 꽉 차게 배치
+          children: [
+            _Title(),
+            _SubTitle(),
+            CustomTextFormField(
+              hintText: '이메일을 입력해주세요',
+              onChanged: (String value) {},
+            ),
+            CustomTextFormField(
+              hintText: '비밀번호를 입력해주세요',
+              onChanged: (String value) {},
+              obscureText: true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Title extends StatelessWidget {
+  const _Title({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '환영합니다!',
+      style: TextStyle(
+          fontSize: 34,
+          fontWeight: FontWeight.w500,
+          color: Colors.black
+      ),
+    );
+  }
+}
+
+class _SubTitle extends StatelessWidget {
+  const _SubTitle({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '이메일과 비밀번호를 입력해서 로그인 해주세요!\n오늘도 성공적인 주문이 되길:)',
+      style: TextStyle(
+        fontSize: 16,
+        color: BODY_TEXT_COLOR,
       ),
     );
   }
