@@ -13,6 +13,9 @@ class _App extends StatelessWidget { // 위젯으로 한 번 감싸주기
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'NotoSans', // 기본 폰트 설정
+      ),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.white, // Scaffold의 기본 색상은 white가 아님
