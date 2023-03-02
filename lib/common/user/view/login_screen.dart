@@ -19,6 +19,10 @@ class LoginScreen extends StatelessWidget {
           children: [
             _Title(),
             _SubTitle(),
+            Image.asset(
+              'asset/img/misc/logo.png',
+              width: MediaQuery.of(context).size.width / 3 * 2, // 전체 화면 너비의 2/3 사이즈
+            ),
             CustomTextFormField(
               hintText: '이메일을 입력해주세요',
               onChanged: (String value) {},
@@ -28,6 +32,24 @@ class LoginScreen extends StatelessWidget {
               onChanged: (String value) {},
               obscureText: true,
             ),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                //primary: PRIMARY_COLOR, - deprecated
+                backgroundColor: PRIMARY_COLOR, // 색 변화가 없음
+              ),
+              child: Text(
+                  '로그인'
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              style: TextButton.styleFrom(
+                //primary: Colors.black, - deprecated
+                foregroundColor: Colors.black, // 색 변화가 없음
+              ),
+              child: Text('회원가입'),
+            )
           ],
         ),
       ),
