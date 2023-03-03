@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_flutter_app/user/view/login_screen.dart';
+import 'package:restaurant_flutter_app/common/view/splash_screen.dart';
 
 void main() {
   runApp(
@@ -17,7 +17,7 @@ class _App extends StatelessWidget { // 위젯으로 한 번 감싸주기
         fontFamily: 'NotoSans', // 기본 폰트 설정
       ),
       debugShowCheckedModeBanner: false,
-      home: LoginScreen()
+      home: SplashScreen()
     );
   }
 }
