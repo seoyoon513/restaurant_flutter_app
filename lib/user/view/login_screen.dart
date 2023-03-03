@@ -3,11 +3,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant_flutter_app/common/component/custom_text_form_field.dart';
 import 'package:restaurant_flutter_app/common/const/colors.dart';
 import 'package:restaurant_flutter_app/common/layout/default_layout.dart';
 import 'package:restaurant_flutter_app/common/view/root_tab.dart';
-
-import '../../component/custom_text_form_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

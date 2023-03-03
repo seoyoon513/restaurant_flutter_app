@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_flutter_app/common/user/view/login_screen.dart';
+import 'package:restaurant_flutter_app/user/view/login_screen.dart';
 
 void main() {
   runApp(
