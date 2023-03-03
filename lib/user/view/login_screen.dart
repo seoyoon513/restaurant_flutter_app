@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter_app/common/component/custom_text_form_field.dart';
 import 'package:restaurant_flutter_app/common/const/colors.dart';
+import 'package:restaurant_flutter_app/common/const/data.dart';
 import 'package:restaurant_flutter_app/common/layout/default_layout.dart';
 import 'package:restaurant_flutter_app/common/view/root_tab.dart';
 
@@ -83,12 +84,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                     );
+
+                    // resp.data 맵에서 key값으로 토큰 가져오기
+                    final refreshToken = resp.data['refreshToken'];
+                    final accessToken = resp.data['accessToken'];
+
+                    // storage에 저장
+                    await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
+                    await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
+
                     Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => RootTab(),
                         )
                     );
-                    print(resp.data); // 응답 받은 데이터 값 (body)
+                    // print(resp.data); // 응답 받은 데이터 값 (body)
                   },
                   style: ElevatedButton.styleFrom(
                     //primary: PRIMARY_COLOR, - deprecated
