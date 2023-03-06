@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter_app/common/const/data.dart';
 import 'package:restaurant_flutter_app/common/layout/default_layout.dart';
@@ -31,19 +32,28 @@ class _SplashScreenState extends State<SplashScreen> {
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
-    if (refreshToken == null || accessToken == null) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(
-          builder: (_) => LoginScreen(),
+    final dio = Dio();
+
+    try {
+      final resp = await dio.post('http://$ip/auth/token',
+        options: Options(
+          headers: {
+            'authorization' : 'Bearer $refreshToken'
+          },
         ),
-        (route) => false,
       );
-    } else {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (_) => RootTab(),
         ),
-        (route) => false,
+            (route) => false,
+      );
+    } catch(e) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => LoginScreen(),
+        ),
+            (route) => false,
       );
     }
   }

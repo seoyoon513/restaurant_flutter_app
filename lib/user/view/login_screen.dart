@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final dio = Dio();
-
-    // localhost
-    final emulatorIp = '10.0.2.2:3000'; // 애뮬레이터는 '10.0.0.2' 가 localhost와 동일
-    final simulatorIp = '127.0.0.1:3000'; // 시뮬레이터는 localhost와 동일
-
-    // 어떤 OS에서 코드가 실행되는지 알 수 있는 메서드
-    final ip = Platform.isIOS ? simulatorIp : emulatorIp;
 
     return DefaultLayout(
       // DefaultLayout으로 한 번 감싼다
@@ -110,16 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final refreshToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY3NzgwMzM0NCwiZXhwIjoxNjc3ODg5NzQ0fQ.4fQCW6fMIQ-pounjLsBeCskHTPEypg3WxMUGenbG4qw';
 
-                    final resp = await dio.post('http://$ip/auth/token',
-                      options: Options(
-                        headers: {
-                          'authorization' : 'Bearer $refreshToken'
-                        },
-                      ),
-                    );
-                    print(resp.data);
                   },
                   style: TextButton.styleFrom(
                     //primary: Colors.black, - deprecated
