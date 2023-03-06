@@ -39,6 +39,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
     return DefaultLayout(
       title: '코팩 딜리버리',
       child: TabBarView(
+        physics: NeverScrollableScrollPhysics(), // TabBarView에서 스와이프 막기
         controller: controller,
         children: [
           Center(
