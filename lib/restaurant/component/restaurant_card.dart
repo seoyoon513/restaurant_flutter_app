@@ -62,11 +62,76 @@ class RestaurantCard extends StatelessWidget {
                 color: BODY_TEXT_COLOR,
                 fontSize: 14.0,
               ), // 텍스트 합치기
+            ),
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                _IconText(
+                  icon: Icons.star,
+                  label: rating.toString(),
+                ),
+                renderDot(),
+                _IconText(
+                  icon: Icons.receipt,
+                  label: ratingCount.toString(),
+                ),
+                renderDot(),
+                _IconText(
+                  icon: Icons.timelapse_outlined,
+                  label: '$deliveryTime 분',
+                ),
+                renderDot(),
+                _IconText(
+                  icon: Icons.monetization_on,
+                  label: deliveryFee == 0 ? '무료' : deliveryFee.toString(),
+                ),
+              ],
             )
           ],
         )
       ],
     );
   }
+
+  Widget renderDot() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: Text(
+        '·',
+        style: TextStyle(
+          fontSize: 12.0,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
 }
 
+class _IconText extends StatelessWidget {
+  final IconData icon; //IconData는 Icons.~ 으로 가져오는 아이콘의 타입
+  final String label;
+
+  const _IconText({required this.icon, required this.label, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          color: PRIMARY_COLOR,
+          size: 14.0,
+        ),
+        const SizedBox(width: 8.0),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12.0,
+            fontWeight: FontWeight.w500,
+          ),
+        )
+      ],
+    );
+  }
+}
