@@ -19,6 +19,19 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
     super.initState();
     // length = 컨트롤 할 개수 = TabBarView의 리스트 요소 개수
     controller = TabController(length: 4, vsync: this);
+    controller.addListener(tabListener);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    controller.removeListener(tabListener);
+  }
+
+  void tabListener() { // controller에 변화가 있을 때마다 setState() 실행
+    setState(() {
+      index = controller.index;
+    });
   }
 
   @override
@@ -57,10 +70,11 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
         unselectedFontSize: 10,
         type: BottomNavigationBarType.fixed,
         onTap: (int index) {
+          controller.animateTo(index); // 하단 선택 아이콘 표시를 위해 리스너 추가
           // 클릭한 index를 파라미터로 받는다
-          setState(() {
-            this.index = index; // 1. class index에 선택된 index를 저장
-          });
+          // setState(() {
+          //   this.index = index; // 1. class index에 선택된 index를 저장
+          // });
           // print(index);
         },
         currentIndex: index,
