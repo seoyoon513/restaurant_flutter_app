@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter_app/restaurant/component/restaurant_card.dart';
 import 'package:restaurant_flutter_app/restaurant/model/restaurant_model.dart';
+import 'package:restaurant_flutter_app/restaurant/view/restaurant_detail_screen.dart';
 
 import '../../common/const/data.dart';
 
@@ -12,7 +13,7 @@ class RestaurantScreen extends StatelessWidget {
     final dio = Dio();
 
     final accessToken =
-    await storage.read(key: ACCESS_TOKEN_KEY); // accessToken 가져오기
+        await storage.read(key: ACCESS_TOKEN_KEY); // accessToken 가져오기
 
     final resp = await dio.get(
       'http://$ip/restaurant',
@@ -35,12 +36,23 @@ class RestaurantScreen extends StatelessWidget {
             }
 
             return ListView.separated(
-              itemBuilder: (_, index) { // 1. 몇 개의 아이템을 렌더링할지 정의
+              itemBuilder: (_, index) {
+                // 1. 몇 개의 아이템을 렌더링할지 정의
                 final item = snapshot.data![index]; // 2. 각 순서에 맞는 아이템을 불러오기
                 // parsed:변환됐다
                 final pItem = RestaurantModel.fromJson(json: item);
 
-                return RestaurantCard.fromModel(model: pItem);
+                return GestureDetector(
+                  // 1. GestureDetector로 감싸기
+                  onTap: () { // 2. 눌렀을 때 페이지 이동
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RestaurantDetailScreen(),
+                      ),
+                    );
+                  },
+                  child: RestaurantCard.fromModel(model: pItem),
+                );
                 //   RestaurantCard(
                 //   image: Image.network(
                 //     pItem.thumbUrl,
