@@ -40,20 +40,21 @@ class RestaurantScreen extends StatelessWidget {
                 // parsed:변환됐다
                 final pItem = RestaurantModel.fromJson(json: item);
 
-                return RestaurantCard(
-                  image: Image.network(
-                    pItem.thumbUrl,
-                    //'http://$ip${item['thumbUrl']}',
-                    fit: BoxFit.cover,
-                  ),
-                  name: pItem.name,
-                  tags: pItem.tags,
-                  // dynamic 타입을 String 타입으로 받는다
-                  ratingsCount: pItem.ratingsCount,
-                  deliveryTime: pItem.deliveryTime,
-                  deliveryFee: pItem.deliveryFee,
-                  ratings: pItem.ratings,
-                );
+                return RestaurantCard.fromModel(model: pItem);
+                //   RestaurantCard(
+                //   image: Image.network(
+                //     pItem.thumbUrl,
+                //     //'http://$ip${item['thumbUrl']}',
+                //     fit: BoxFit.cover,
+                //   ),
+                //   name: pItem.name,
+                //   tags: pItem.tags,
+                //   // dynamic 타입을 String 타입으로 받는다
+                //   ratingsCount: pItem.ratingsCount,
+                //   deliveryTime: pItem.deliveryTime,
+                //   deliveryFee: pItem.deliveryFee,
+                //   ratings: pItem.ratings,
+                // );
               },
               separatorBuilder: (_, index) {
                 return SizedBox(height: 16.0);
