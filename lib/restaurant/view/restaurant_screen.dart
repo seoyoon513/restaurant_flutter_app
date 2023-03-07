@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter_app/restaurant/component/restaurant_card.dart';
+import 'package:restaurant_flutter_app/restaurant/model/restaurant_model.dart';
 
 import '../../common/const/data.dart';
 
@@ -11,7 +12,7 @@ class RestaurantScreen extends StatelessWidget {
     final dio = Dio();
 
     final accessToken =
-        await storage.read(key: ACCESS_TOKEN_KEY); // accessToken 가져오기
+    await storage.read(key: ACCESS_TOKEN_KEY); // accessToken 가져오기
 
     final resp = await dio.get(
       'http://$ip/restaurant',
@@ -36,17 +37,33 @@ class RestaurantScreen extends StatelessWidget {
             return ListView.separated(
               itemBuilder: (_, index) { // 1. 몇 개의 아이템을 렌더링할지 정의
                 final item = snapshot.data![index]; // 2. 각 순서에 맞는 아이템을 불러오기
+                // parsed:변환됐다
+                final pItem = RestaurantModel( // 데이터 매핑
+                    id: item['id'],
+                    name: item['name'],
+                    thumbUrl: 'http://$ip${item['thumbUrl']}',
+                    tags: List<String>.from(item['tags']),
+                    priceRange: RestaurantPriceRange.values.firstWhere(
+                            (e) => e.name == item['priceRange'],
+                    ),
+                    ratings: item['ratings'],
+                    ratingsCount: item['ratingsCount'],
+                    deliveryTime: item['deliveryTime'],
+                    deliveryFee: item['deliveryFee']);
+
                 return RestaurantCard(
                   image: Image.network(
-                    'http://$ip${item['thumbUrl']}',
+                    pItem.thumbUrl,
+                    //'http://$ip${item['thumbUrl']}',
                     fit: BoxFit.cover,
                   ),
-                  name: item['name'],
-                  tags: List<String>.from(item['tags']), // dynamic 타입을 String 타입으로 받는다
-                  ratingsCount: item['ratingsCount'],
-                  deliveryTime: item['deliveryTime'],
-                  deliveryFee: item['deliveryFee'],
-                  ratings: item['ratings'],
+                  name: pItem.name,
+                  tags: pItem.tags,
+                  // dynamic 타입을 String 타입으로 받는다
+                  ratingsCount: pItem.ratingsCount,
+                  deliveryTime: pItem.deliveryTime,
+                  deliveryFee: pItem.deliveryFee,
+                  ratings: pItem.ratings,
                 );
               },
               separatorBuilder: (_, index) {
