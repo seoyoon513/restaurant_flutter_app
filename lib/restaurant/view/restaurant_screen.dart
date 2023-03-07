@@ -38,18 +38,7 @@ class RestaurantScreen extends StatelessWidget {
               itemBuilder: (_, index) { // 1. 몇 개의 아이템을 렌더링할지 정의
                 final item = snapshot.data![index]; // 2. 각 순서에 맞는 아이템을 불러오기
                 // parsed:변환됐다
-                final pItem = RestaurantModel( // 데이터 매핑
-                    id: item['id'],
-                    name: item['name'],
-                    thumbUrl: 'http://$ip${item['thumbUrl']}',
-                    tags: List<String>.from(item['tags']),
-                    priceRange: RestaurantPriceRange.values.firstWhere(
-                            (e) => e.name == item['priceRange'],
-                    ),
-                    ratings: item['ratings'],
-                    ratingsCount: item['ratingsCount'],
-                    deliveryTime: item['deliveryTime'],
-                    deliveryFee: item['deliveryFee']);
+                final pItem = RestaurantModel.fromJson(json: item);
 
                 return RestaurantCard(
                   image: Image.network(
