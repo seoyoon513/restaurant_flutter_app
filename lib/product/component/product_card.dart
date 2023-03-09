@@ -9,7 +9,17 @@ class ProdcutCard extends StatelessWidget {
     return Row(
       children: [
         RestaurantCard(
-          image: Image.asset('asset/img/food/ddeok_bok_gi.jpg'),
+          image: ClipRRect(
+            borderRadius: BorderRadius.circular(
+              8.0,
+            ),
+            child: Image.asset(
+              'asset/img/food/ddeok_bok_gi.jpg',
+              width: 110,
+              height: 110,
+              fit: BoxFit.cover,
+            ),
+          ),
           name: '불타는 떡볶이',
           tags: ['떡볶이', '맛있음', '치즈'],
           ratingsCount: 100,
