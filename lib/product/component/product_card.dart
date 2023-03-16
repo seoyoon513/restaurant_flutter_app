@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_flutter_app/common/const/colors.dart';
 import 'package:restaurant_flutter_app/restaurant/component/restaurant_card.dart';
 
-class ProdcutCard extends StatelessWidget {
-  const ProdcutCard({Key? key}) : super(key: key);
+class ProductCard extends StatelessWidget {
+  const ProductCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
