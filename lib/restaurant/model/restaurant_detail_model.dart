@@ -1,5 +1,7 @@
 import 'package:restaurant_flutter_app/restaurant/model/restaurant_model.dart';
 
+import '../../common/const/data.dart';
+
 class RestaurantDetailModel extends RestaurantModel {
   // 상속을 통해서 중복 값을 세팅
   final String detail;
@@ -25,7 +27,7 @@ class RestaurantDetailModel extends RestaurantModel {
     return RestaurantDetailModel(
       id: json['id'],
       name: json['name'],
-      thumbUrl: json['thumbUrl'],
+      thumbUrl: 'http://$ip${json['thumbUrl']}',
       tags: List<String>.from(json['tags']),
       priceRange: RestaurantPriceRange.values.firstWhere(
         (e) => e.name == json['priceRange'],
@@ -36,7 +38,7 @@ class RestaurantDetailModel extends RestaurantModel {
       deliveryFee: json['deliveryFee'],
       detail: json['detail'],
       // product 안의 각각의 요소에 접근해서 매핑해주어야 함
-      products: json['products'].map<RestaurantProductModel>( // 제네릭을 넣어주지 않으면 자동으로 dynamic 타입으로 지정됨 
+      products: json['products'].map<RestaurantProductModel>( // 제네릭을 넣어주지 않으면 자동으로 dynamic 타입으로 지정됨
         (x) => RestaurantProductModel(
             id: x['id'],
             name: x['name'],

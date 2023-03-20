@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter_app/common/const/colors.dart';
+import 'package:restaurant_flutter_app/restaurant/model/restaurant_detail_model.dart';
 import 'package:restaurant_flutter_app/restaurant/model/restaurant_model.dart';
 
 class RestaurantCard extends StatelessWidget {
@@ -57,6 +58,8 @@ class RestaurantCard extends StatelessWidget {
       deliveryFee: model.deliveryFee,
       ratings: model.ratings,
       isDetail: isDetail,
+      // RestaurantDetailModel은 RestaurantCard의 child이므로 들어올 수 있다
+      detail: model is RestaurantDetailModel ? model.detail : null,
     );
   }
 
@@ -64,14 +67,13 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (isDetail)
-          image,
+        if (isDetail) image,
         if (!isDetail)
-        ClipRRect(
-          // 이미지 테두리를 깎는 위젯
-          borderRadius: BorderRadius.circular(12.0),
-          child: image,
-        ),
+          ClipRRect(
+            // 이미지 테두리를 깎는 위젯
+            borderRadius: BorderRadius.circular(12.0),
+            child: image,
+          ),
         const SizedBox(height: 16.0),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: isDetail ? 16.0 : 0),

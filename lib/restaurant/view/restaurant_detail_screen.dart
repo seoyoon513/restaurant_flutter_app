@@ -35,15 +35,19 @@ class RestaurantDetailScreen extends StatelessWidget {
       title: '불타는 떡볶이',
       child: FutureBuilder<Map<String, dynamic>>(
         future: getRestaurantDetail(),
-        builder: (context, AsyncSnapshot<Map<String, dynamic>>snapshot) {
+        builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           print(snapshot.data);
           if (!snapshot.hasData) {
-            return Container();
+            return Center(
+              child: CircularProgressIndicator(), // 로딩 추가
+            );
           }
           final item = RestaurantDetailModel.fromJson(json: snapshot.data!);
           return CustomScrollView(
             slivers: [
-              renderTop(),
+              renderTop(
+                model: item,
+              ),
               renderLabel(),
               renderProducts(),
             ],
@@ -85,18 +89,14 @@ class RestaurantDetailScreen extends StatelessWidget {
     );
   }
 
-  SliverToBoxAdapter renderTop() {
+  SliverToBoxAdapter renderTop({
+    required RestaurantDetailModel model,
+  }) {
     return SliverToBoxAdapter(
-        child: RestaurantCard(
-      image: Image.asset('asset/img/food/ddeok_bok_gi.jpg'),
-      name: '불타는 떡볶이',
-      tags: ['떡볶이', '맛있음', '치즈'],
-      ratingsCount: 100,
-      deliveryTime: 30,
-      deliveryFee: 3000,
-      ratings: 4.76,
-      isDetail: true,
-      detail: '맛있는 떡볶이',
-    ));
+      child: RestaurantCard.fromModel(
+        model: model,
+        isDetail: true,
+      ),
+    );
   }
 }
