@@ -42,7 +42,7 @@ class RestaurantScreen extends StatelessWidget {
                 // 1. 몇 개의 아이템을 렌더링할지 정의
                 final item = snapshot.data![index]; // 2. 각 순서에 맞는 아이템을 불러오기
                 // parsed:변환됐다
-                final pItem = RestaurantModel.fromJson(json: item);
+                final pItem = RestaurantModel.fromJson(item);
 
                 return GestureDetector(
                   // 1. GestureDetector로 감싸기
