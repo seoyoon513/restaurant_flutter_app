@@ -30,7 +30,7 @@ class RestaurantDetailModel extends RestaurantModel {
       thumbUrl: 'http://$ip${json['thumbUrl']}',
       tags: List<String>.from(json['tags']),
       priceRange: RestaurantPriceRange.values.firstWhere(
-        (e) => e.name == json['priceRange'],
+            (e) => e.name == json['priceRange'],
       ),
       ratings: json['ratings'],
       ratingsCount: json['ratingsCount'],
@@ -39,12 +39,10 @@ class RestaurantDetailModel extends RestaurantModel {
       detail: json['detail'],
       // product 안의 각각의 요소에 접근해서 매핑해주어야 함
       products: json['products'].map<RestaurantProductModel>( // 제네릭을 넣어주지 않으면 자동으로 dynamic 타입으로 지정됨
-        (x) => RestaurantProductModel(
-            id: x['id'],
-            name: x['name'],
-            imgUrl: x['imgUrl'],
-            detail: x['detail'],
-            price: x['price']),
+            (x) =>
+            RestaurantProductModel.fromJson(
+                json: x,
+            ),
       ).toList(), // 매핑을 받아서 리스트로 반환
     );
   }
@@ -64,4 +62,16 @@ class RestaurantProductModel {
     required this.detail,
     required this.price,
   });
+
+  factory RestaurantProductModel.fromJson({
+    required Map<String, dynamic> json,
+  }) {
+    return RestaurantProductModel(
+        id: json['id'],
+        name: json['name'],
+        imgUrl: 'http://$ip${json['imgUrl']}',
+        detail: json['detail'],
+        price: json['price'],
+    );
+  }
 }
