@@ -42,7 +42,7 @@ class RestaurantDetailScreen extends StatelessWidget {
               child: CircularProgressIndicator(), // 로딩 추가
             );
           }
-          final item = RestaurantDetailModel.fromJson(json: snapshot.data!);
+          final item = RestaurantDetailModel.fromJson(snapshot.data!);
           return CustomScrollView(
             slivers: [
               renderTop(
