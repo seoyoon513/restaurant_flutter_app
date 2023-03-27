@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurant_flutter_app/common/model/cursor_pagination_model.dart';
+import 'package:restaurant_flutter_app/common/model/pagination_params.dart';
 import 'package:restaurant_flutter_app/restaurant/repository/restaurant_repository.dart';
 
 /// 캐시를 관리하기 위한 Provider -> StateNotifierProvider
@@ -40,7 +41,7 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
     // 강제로 다시 로딩하기
     // true - CursorPaginationLoading()
     bool forceRefetch = false,
-}) async {
+  }) async {
     // 5가지 가능성
     // state의 상태
     // 1) CursorPagination - 정상적으로 데이터가 있는 상태
@@ -70,5 +71,43 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
     if (fetchMore && (isLoading || isRefetching || isFetchingMore)) {
       return;
     }
- }
+
+    // PaginationParams 생성
+    PaginationParams paginationParams = PaginationParams(
+      count: fetchCount,
+    );
+
+    // fetchMore
+    // 데이터를 추가로 더 가져오는 상황
+    if (fetchMore) {
+      // 데이터를 무조건 들고 있는 상황인 조건
+      final pState = state as CursorPagination;
+
+      state = CursorPaginationFetchingMore(
+        meta: pState.meta,
+        data: pState.data,
+      );
+
+      // 어떤 데이터 다음으로 가져와야 할지 결정 -> after를 넣어주어야 함
+      paginationParams = paginationParams.copyWith(
+        after: pState.data.last.id,
+      );
+    }
+
+    final resp = await repository.paginate(
+      paginationParams: paginationParams,
+    );
+
+    if (state is CursorPaginationFetchingMore) {
+      final pState = state as CursorPaginationFetchingMore;
+
+      // 기존 데이터 + 새로 들어온 데이터
+      state = resp.copyWith(
+        data: [
+          ...pState.data,
+          ...resp.data,
+        ]
+      );
+    }
+  }
 }
