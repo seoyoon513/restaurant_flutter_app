@@ -1,32 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurant_flutter_app/common/dio/dio.dart';
+import 'package:restaurant_flutter_app/common/model/cursor_pagination_model.dart';
 import 'package:restaurant_flutter_app/restaurant/component/restaurant_card.dart';
 import 'package:restaurant_flutter_app/restaurant/model/restaurant_model.dart';
 import 'package:restaurant_flutter_app/restaurant/repository/restaurant_repository.dart';
 import 'package:restaurant_flutter_app/restaurant/view/restaurant_detail_screen.dart';
 
-import '../../common/const/data.dart';
-
 class RestaurantScreen extends ConsumerWidget {
   const RestaurantScreen({Key? key}) : super(key: key);
-
-  Future<List<RestaurantModel>> paginateRestaurant(WidgetRef ref) async {
-    final dio = ref.watch(dioProvider);
-
-    final resp =
-        await RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant')
-            .paginate();
-    return resp.data;
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: FutureBuilder<List<RestaurantModel>>(
-          future: paginateRestaurant(ref),
-          builder: (context, AsyncSnapshot<List<RestaurantModel>> snapshot) {
+        child: FutureBuilder<CursorPagination<RestaurantModel>>(
+          future: ref.watch(restaurantRepositoryProvider).paginate(),
+          builder: (context, AsyncSnapshot<CursorPagination<RestaurantModel>> snapshot) {
             if (!snapshot.hasData) {
               return Center(
                 child: CircularProgressIndicator(), // 로딩 추가
@@ -36,7 +25,7 @@ class RestaurantScreen extends ConsumerWidget {
             return ListView.separated(
               itemBuilder: (_, index) {
                 // 1. 몇 개의 아이템을 렌더링할지 정의
-                final pItem = snapshot.data![index]; // 2. 각 순서에 맞는 아이템을 불러오기
+                final pItem = snapshot.data!.data[index]; // 2. 각 순서에 맞는 아이템을 불러오기
 
                 return GestureDetector(
                   // 1. GestureDetector로 감싸기
@@ -70,7 +59,7 @@ class RestaurantScreen extends ConsumerWidget {
               separatorBuilder: (_, index) {
                 return SizedBox(height: 16.0);
               },
-              itemCount: snapshot.data!.length,
+              itemCount: snapshot.data!.data.length,
             );
           },
         ));

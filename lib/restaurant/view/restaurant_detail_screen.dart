@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:restaurant_flutter_app/common/dio/dio.dart';
 import 'package:restaurant_flutter_app/common/layout/default_layout.dart';
 import 'package:restaurant_flutter_app/product/component/product_card.dart';
 import 'package:restaurant_flutter_app/restaurant/component/restaurant_card.dart';
 import 'package:restaurant_flutter_app/restaurant/model/restaurant_detail_model.dart';
 import 'package:restaurant_flutter_app/restaurant/repository/restaurant_repository.dart';
-
-import '../../common/const/data.dart';
 
 class RestaurantDetailScreen extends ConsumerWidget {
   final String id;
@@ -17,19 +14,22 @@ class RestaurantDetailScreen extends ConsumerWidget {
     Key? key,
   }) : super(key: key);
 
-  Future<RestaurantDetailModel> getRestaurantDetail(WidgetRef ref) async {
-    final dio = ref.watch(dioProvider);
-
-    final repository = RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
-    return repository.getRestaurantDetail(id: id);
-  }
+  // 1. Repository를 Provider로 작업
+  // Future<RestaurantDetailModel> getRestaurantDetail(WidgetRef ref) async {
+  //   return ref.watch(restaurantRepositoryProvider).getRestaurantDetail(
+  //         id: id,
+  //       );
+  // }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultLayout(
       title: '불타는 떡볶이',
       child: FutureBuilder<RestaurantDetailModel>(
-        future: getRestaurantDetail(ref),
+        // 2. 1줄짜리 함수를 사용하는 것보다 1줄에 해당하는 값을 직접 대입
+        future: ref.watch(restaurantRepositoryProvider).getRestaurantDetail(
+              id: id,
+            ),
         builder: (context, AsyncSnapshot<RestaurantDetailModel> snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -74,8 +74,8 @@ class RestaurantDetailScreen extends ConsumerWidget {
   }
 
   SliverPadding renderProducts({
-  required List<RestaurantProductModel> products,
-}) {
+    required List<RestaurantProductModel> products,
+  }) {
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       sliver: SliverList(
