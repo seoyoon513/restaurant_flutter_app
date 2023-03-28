@@ -5,32 +5,65 @@ import 'package:restaurant_flutter_app/restaurant/component/restaurant_card.dart
 import 'package:restaurant_flutter_app/restaurant/provider/restaurant_provider.dart';
 import 'package:restaurant_flutter_app/restaurant/view/restaurant_detail_screen.dart';
 
-class RestaurantScreen extends ConsumerWidget {
+class RestaurantScreen extends ConsumerStatefulWidget {
   const RestaurantScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RestaurantScreen> createState() => _RestaurantScreenState();
+}
+
+class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
+  final ScrollController controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // ListView의 스크롤이 변하면 scrollerListener 함수 실행됨
+    controller.addListener(scrollListener);
+  }
+
+  void scrollListener() {
+    //print('run');
+    // 현재 위치가
+    // 최대 길이보다 조금 덜되는 위치까지 왔다면
+    // 새로운 데이터를 추가요청
+    // 현재 position > 최대 스크롤 가능한 길이 - 300
+    if (controller.offset > controller.position.maxScrollExtent - 300) {
+      ref.read(restaurantProvider.notifier).paginate(
+          fetchMore: true // 새로운 데이터 붙여넣기
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final data = ref.watch(restaurantProvider);
 
-    // 2-1. length로만 구분하면 error 상태인지 loading 상태인지 모름
-    // if (data.length == 0) {
-    //   return Center(
-    //     child: CircularProgressIndicator(),
-    //   );
-    // }
-
-    // 2-2. Loading 상태일 때만 체크할 수 있음
+    // 처음 로딩일 때
     if (data is CursorPaginationLoading) {
       return Center(
         child: CircularProgressIndicator(),
       );
     }
 
+    // 에러일 때
+    if (data is CursorPaginationError) {
+      return Center(
+        child: Text(data.message),
+      );
+    }
+
+    // CursorPagination
+    // CursorPaginationFetchMore
+    // CursorPaginationRefetching
+
     final cp = data as CursorPagination;
 
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: ListView.separated(
+          controller: controller,
           itemCount: cp.data.length,
           itemBuilder: (_, index) {
             // 1. 몇 개의 아이템을 렌더링할지 정의
