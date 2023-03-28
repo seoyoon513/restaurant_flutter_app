@@ -64,8 +64,22 @@ class _RestaurantScreenState extends ConsumerState<RestaurantScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: ListView.separated(
           controller: controller,
-          itemCount: cp.data.length,
+          itemCount: cp.data.length + 1, // 그릴 수 있는 개수 + 1
           itemBuilder: (_, index) {
+            if (index == cp.data.length) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Center(
+                  child: data is CursorPaginationFetchingMore
+                      ? CircularProgressIndicator()
+                      : Text("마지막 데이터입니다 ㅠㅠ"),
+                ),
+              );
+            }
+
             // 1. 몇 개의 아이템을 렌더링할지 정의
             final pItem = cp.data[index]; // 2. 각 순서에 맞는 아이템을 불러오기
 
