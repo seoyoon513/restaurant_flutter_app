@@ -10,10 +10,10 @@ final restaurantDetailProvider =
     Provider.family<RestaurantModel?, String>((ref, id) {
       final state = ref.watch(restaurantProvider);
 
-      if (state is! CursorPagination<RestaurantModel>) {
+      if (state is! CursorPagination) {
         return null;
       }
-      
+
       return state.data.firstWhere((element) => element.id == id); // 동일 아이디 데이터 가져오기
 });
 
@@ -45,7 +45,7 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
   }
 
   // 2. 요청 보내고 응답 받기
-  void paginate({
+  Future<void> paginate({
     // 한 번에 받아오는 값의 개수
     int fetchCount = 20,
     // 추가로 데이터 가져올지 여부
@@ -146,5 +146,38 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
     } catch(e) {
       state = CursorPaginationError(message: "데이터를 가져오지 못했습니다.");
     }
+  }
+
+  // id에 해당하는 상세 값을 가져오는 함수
+  void getDetail({
+    required String id,
+  }) async {
+    // 만약에 아직 데이터가 하나도 없는 상태라면 (CursorPagination이 아니라면)
+    // 데이터를 가져오는 시도를 한다
+    if (state is! CursorPagination) {
+      await this.paginate();
+    }
+
+    // state가 CursorPagination이 아닐 때 그냥 리턴 (예외사항)
+    if (state is! CursorPagination) {
+      return;
+    }
+
+    final pState = state as CursorPagination; // RestaurantModel 타입의 state
+
+    final resp = await repository.getRestaurantDetail(
+        id: id); // RestaurantDetailModel 타입의 응답
+
+    // state의 data만 resp로 변경
+    // [RestaurantModel(1), RestaurantModel(2), RestaurantModel(3)]
+    // id : 2인 친구를 Detail모델을 가져와라
+    // getDetail(id: 2);
+    // [RestaurantModel(1), RestaurantDetailModel(2), RestaurantModel(3)]
+    state = pState.copyWith(
+        data: pState.data
+            .map<RestaurantModel>(
+              (e) => e.id == id ? resp : e,
+            )
+            .toList());
   }
 }
