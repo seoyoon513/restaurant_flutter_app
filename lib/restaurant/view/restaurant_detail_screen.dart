@@ -9,7 +9,7 @@ import 'package:restaurant_flutter_app/restaurant/repository/restaurant_reposito
 
 import '../model/restaurant_model.dart';
 
-class RestaurantDetailScreen extends ConsumerWidget {
+class RestaurantDetailScreen extends ConsumerStatefulWidget {
   final String id;
 
   const RestaurantDetailScreen({
@@ -17,17 +17,27 @@ class RestaurantDetailScreen extends ConsumerWidget {
     Key? key,
   }) : super(key: key);
 
-  // 1. Repository를 Provider로 작업
-  // Future<RestaurantDetailModel> getRestaurantDetail(WidgetRef ref) async {
-  //   return ref.watch(restaurantRepositoryProvider).getRestaurantDetail(
-  //         id: id,
-  //       );
-  // }
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();
+}
+
+class _RestaurantDetailScreenState extends ConsumerState<RestaurantDetailScreen> {
+  
+  @override
+  void initState() {
+    super.initState();
+
+    // restaurantProvider를 read하는데
+    // restaurantDetailProvider에서 watch를 하고 있기 때문에
+    // restaurantProvider 안에서 상태가 변경되면 restaurantDetailProvider도 다시 빌드됨
+    ref.read(restaurantProvider.notifier).getDetail(id: widget.id);
+  }
+
+  // 1. Repository를 Provider로 작업
+  @override
+  Widget build(BuildContext context) {
     // 캐시 공유 provider watch
-    final state = ref.watch(restaurantDetailProvider(id));
+    final state = ref.watch(restaurantDetailProvider(widget.id));
 
     if (state == null) {
       return DefaultLayout(
@@ -45,10 +55,12 @@ class RestaurantDetailScreen extends ConsumerWidget {
           renderTop(
             model: state!,
           ),
-          // renderLabel(),
-          // renderProducts(
-          //   products: snapshot.data!.products,
-          // ),
+          if (state is RestaurantDetailModel)
+          renderLabel(),
+          if (state is RestaurantDetailModel)
+          renderProducts(
+            products: state.products,
+          ),
         ],
       ),
     );
