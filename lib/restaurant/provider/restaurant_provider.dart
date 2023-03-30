@@ -1,14 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:restaurant_flutter_app/common/model/cursor_pagination_model.dart';
 import 'package:restaurant_flutter_app/common/model/pagination_params.dart';
+import 'package:restaurant_flutter_app/restaurant/model/restaurant_model.dart';
 import 'package:restaurant_flutter_app/restaurant/repository/restaurant_repository.dart';
+
+/// 캐시를 공유하기 위한 Provider
+//home -> detail
+final restaurantDetailProvider =
+    Provider.family<RestaurantModel?, String>((ref, id) {
+      final state = ref.watch(restaurantProvider);
+
+      if (state is! CursorPagination<RestaurantModel>) {
+        return null;
+      }
+      
+      return state.data.firstWhere((element) => element.id == id); // 동일 아이디 데이터 가져오기
+});
 
 /// 캐시를 관리하기 위한 Provider -> StateNotifierProvider
 final restaurantProvider =
 // 2-1.List<RestaurantModel>이 아닌 CursorPagination을 받아야 다음 페이지를 요청할 수 있음
 // meta 정의 확인
-StateNotifierProvider<RestaurantStateNotifier, CursorPaginationBase>(
-      (ref) {
+    StateNotifierProvider<RestaurantStateNotifier, CursorPaginationBase>(
+  (ref) {
     final repository = ref.watch(restaurantRepositoryProvider);
     final notifier = RestaurantStateNotifier(repository: repository);
     return notifier;
